@@ -40,7 +40,7 @@ def get_augmented_data_loader(dataset_path):
     train_gen = get_augmented(
         x,
         y, 
-        batch_size=5,
+        batch_size=2,
         data_gen_args = dict(
             rotation_range=5.,
             width_shift_range=0.05,
