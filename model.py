@@ -11,7 +11,7 @@ class CustomUnetMpdel():
         3D Tensor of shape (x, y, num_channels)
     """
     def __init__(self, input_shape):
-        model = custom_unet(
+        self.model = custom_unet(
             input_shape,
             filters=32,
             use_batch_norm=True,
@@ -19,13 +19,12 @@ class CustomUnetMpdel():
             dropout_change_per_layer=0.0,
             num_layers=4
         )
-        model.summary()
-        model.compile(
+        self.model.summary()
+        self.model.compile(
             optimizer=Adam(), 
             loss='binary_crossentropy',
             metrics=[iou, iou_thresholded]
         )
-        self.model = model
 
     def train(self, dataset_path = 'data/ratings_train.dat'):
         from utils import get_augmented_data_loader
