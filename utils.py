@@ -1,4 +1,6 @@
-import cv2, os
+import cv2
+import os
+import numpy as np
 
 def load_images_from_folder(folder):
     "Create list of images from folder directory"
