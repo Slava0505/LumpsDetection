@@ -1,6 +1,7 @@
 import cv2, os
 
 def load_images_from_folder(folder):
+    "Create list of images from folder directory"
     images = []
     files = os.listdir(folder)
     files.sort()
@@ -9,15 +10,16 @@ def load_images_from_folder(folder):
         img = cv2.resize(img, (512, 512))
         if img is not None:
             images.append(img)
-    return files, images
+    return images
 
 
 def load_dataset(dataset_path):
+    "Load all images and annotation list from dataset folder"
     images_path = dataset_path+'images/'
     annotation_path = dataset_path+'annotation/'
 
-    img_names, img_list = load_images_from_folder(images_path)
-    msk_names, msk_list = load_images_from_folder(annotation_path)
+    img_list = load_images_from_folder(images_path)
+    msk_list = load_images_from_folder(annotation_path)
 
 
     x = np.asarray(img_list, dtype=np.float32)/255
@@ -27,10 +29,16 @@ def load_dataset(dataset_path):
 
     return x, y
 
-def get_augmented(x, y):
+def get_augmented_data_loader(dataset_path):
+    "Load dataset and apply augmentation and create generator from list of images and annotation"
+    x, y = load_dataset(dataset_path)
+
     from keras_unet.utils import get_augmented
+
     train_gen = get_augmented(
-        x, y, batch_size=2,
+        x,
+        y, 
+        batch_size=5,
         data_gen_args = dict(
             rotation_range=5.,
             width_shift_range=0.05,
