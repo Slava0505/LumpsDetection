@@ -29,9 +29,9 @@ class CustomUnetMpdel():
             loss='binary_crossentropy'
         )
 
-    def train(self, dataset_path = 'data/ratings_train.dat'):
+    def train(self, dataset_path):
         from utils import get_augmented_data_loader
-        train_gen = get_augmented_data_loader('data/ratings_train.dat')
+        train_gen = get_augmented_data_loader(dataset_path)
 
         self.initial_model()
         model.fit_generator(
@@ -40,7 +40,7 @@ class CustomUnetMpdel():
             epochs=8
         )
 
-    def evaluate(self, dataset_path = 'data/ratings_train.dat'):
+    def evaluate(self, dataset_path):
         pass
 
     def load_weights(self, model_path):
