@@ -27,7 +27,7 @@ def load_dataset(dataset_path):
     x = np.asarray(img_list, dtype=np.float32)/255
     y = np.asarray(msk_list, dtype=np.float32)/255
     y[y>0] = 1
-    y = y.sum(axis=3).reshape(47, y.shape[1], y.shape[2], 1)
+    y = y.sum(axis=3).reshape(y.shape[0], y.shape[1], y.shape[2], 1)
 
     return x, y
 
