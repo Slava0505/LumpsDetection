@@ -57,7 +57,7 @@ def get_augmented_data_loader(dataset_path):
 def load_demo_dataset(dataset_path):
     "Load video to image list"
 
-    cap = cv2.VideoCapture(demo_path)
+    cap = cv2.VideoCapture(dataset_path)
     x = []
     ret=True
     while(ret):
