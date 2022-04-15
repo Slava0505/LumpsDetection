@@ -1,6 +1,8 @@
 from keras_unet.models import custom_unet
 from tensorflow.keras.optimizers import Adam
 from keras_unet.metrics import iou, iou_thresholded
+import numpy as np
+import cv2
 
 class CustomUnetMpdel():
     """Unet model for Lumb Segmentation
@@ -43,11 +45,38 @@ class CustomUnetMpdel():
     def evaluate(self, dataset_path):
         pass
 
-    def demo(self, demo_path):
-        from utils import load_demo_dataset
+    def demo(self, demo_path, out_folder_path):
+        from utils import load_demo_dataset, mask_to_rgba, zero_pad_mask
         x_test = load_demo_dataset(demo_path)
-        y_pred = self.model.predict(x_test)
-        return x_test, y_pred
+        prediction = self.model.predict(x_test)
+
+        color = 'green'
+        masks = []
+        for i, _mask in enumerate(prediction): 
+            mask = mask_to_rgba(
+                                zero_pad_mask(prediction[i], desired_size=prediction[i].shape[1]),
+                                color=color
+                            )
+            masks.append(mask)
+        masks = np.asarray(masks)
+
+        outs = []
+        for i, mask in enumerate(masks):
+            out = x_test[i]*0.8 +masks[i]*0.2
+            outs.append(out)
+        outs = np.asarray(outs)
+
+        width  = int(prediction[i].shape[0])
+        height = int(prediction[i].shape[1])
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        new_video = cv2.VideoWriter(out_folder_path+'/output_demo.avi', fourcc, 5.0, (width,height))
+
+        for out in outs:
+            out = (out*255).astype(np.uint8)
+            new_video.write(out)
+        new_video.release()
+
+
 
     def load_weights(self, model_path):
         from tensorflow.keras.models import load_model

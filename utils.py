@@ -56,14 +56,65 @@ def get_augmented_data_loader(dataset_path):
 
 def load_demo_dataset(dataset_path):
     "Load video to image list"
-    cap = cv2.VideoCapture(dataset_path)
+
+    cap = cv2.VideoCapture(demo_path)
     x = []
     ret=True
     while(ret):
         ret, frame = cap.read()
-        x.append(frame)
-    
+        if ret:
+            frame = cv2.resize(frame, (512, 512))
+            x.append(frame)
 
     x = np.asarray(x, dtype=np.float32)/255
 
     return x
+
+
+def mask_to_rgba(mask, color="red"):
+    """
+    Converts binary segmentation mask from white to red color.
+    Also adds alpha channel to make black background transparent.
+    
+    Args:
+        mask (numpy.ndarray): [description]
+        color (str, optional): Check `MASK_COLORS` for available colors. Defaults to "red".
+    
+    Returns:
+        numpy.ndarray: [description]
+    """    
+    assert(color in [
+    "red", "green", "blue",
+    "yellow", "magenta", "cyan"
+])
+    assert(mask.ndim==3 or mask.ndim==2)
+
+    h = mask.shape[0]
+    w = mask.shape[1]
+    zeros = np.zeros((h, w))
+    ones = mask.reshape(h, w)
+    if color == "red":
+        return np.stack((ones, zeros, zeros), axis=-1)
+    elif color == "green":
+        return np.stack((zeros, ones, zeros), axis=-1)
+    elif color == "blue":
+        return np.stack((zeros, zeros, ones), axis=-1)
+    elif color == "yellow":
+        return np.stack((ones, ones, zeros), axis=-1)
+    elif color == "magenta":
+        return np.stack((ones, zeros, ones), axis=-1)
+    elif color == "cyan":
+        return np.stack((zeros, ones, ones), axis=-1)
+def zero_pad_mask(mask, desired_size):
+    """[summary]
+    
+    Args:
+        mask (numpy.ndarray): [description]
+        desired_size ([type]): [description]
+    
+    Returns:
+        numpy.ndarray: [description]
+    """
+    pad = (desired_size - mask.shape[0]) // 2
+    padded_mask = np.pad(mask, pad, mode="constant")
+    return padded_mask
