@@ -69,7 +69,7 @@ class CustomUnetMpdel():
         width  = int(prediction[i].shape[0])
         height = int(prediction[i].shape[1])
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        new_video = cv2.VideoWriter(out_folder_path+'/output_demo.gif', fourcc, 5.0, (width,height))
+        new_video = cv2.VideoWriter(out_folder_path+'/output_demo.avi', fourcc, 5.0, (width,height))
 
         for out in outs:
             out = (out*255).astype(np.uint8)
