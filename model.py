@@ -34,7 +34,7 @@ class CustomUnetMpdel():
         train_gen = get_augmented_data_loader(dataset_path)
 
         self.initial_model()
-        model.fit_generator(
+        self.model.fit_generator(
             train_gen,
             steps_per_epoch=200,
             epochs=8
@@ -42,6 +42,12 @@ class CustomUnetMpdel():
 
     def evaluate(self, dataset_path):
         pass
+
+    def demo(self, demo_path):
+        from utils import load_demo_dataset
+        x_test = load_demo_dataset(demo_path)
+        y_pred = self.model.predict(x_test)
+        return x_test, y_pred
 
     def load_weights(self, model_path):
         from tensorflow.keras.models import load_model

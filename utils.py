@@ -52,3 +52,18 @@ def get_augmented_data_loader(dataset_path):
             fill_mode='constant'
         ))
     return train_gen
+
+
+def load_demo_dataset(dataset_path):
+    "Load video to image list"
+    cap = cv2.VideoCapture(dataset_path)
+    x = []
+    ret=True
+    while(ret):
+        ret, frame = cap.read()
+        x.append(frame)
+    
+
+    x = np.asarray(x, dtype=np.float32)/255
+
+    return x
